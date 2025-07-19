@@ -10,11 +10,15 @@ export const metadata = {
   description: "AI-powered Medical Chatbot",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={`${inter.className} bg-white text-gray-900`}>
         <NavBar />
+        <img src="/images/your-image.jpg" alt="Description" />
         {children}
       </body>
     </html>
