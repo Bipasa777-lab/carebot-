@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  node-server:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.node
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongo:27017/wellnessai
+      - AI_SERVER_URL=http://ai-server:8000
+    depends_on:
+      - mongo
+      - ai-server
+
+  ai-server:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.flask
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - OLLAMA_HOST=http://ollama:11434
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+
+volumes:
+  mongo-data:
+  ollama-models:
+

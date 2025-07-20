@@ -1,0 +1,27 @@
+# Core Server
+flask==2.3.3
+flask-cors==4.0.0
+
+# AI and LLM Integration
+langchain==0.1.14
+ollama==0.1.6
+
+# Utilities
+python-dotenv==1.0.1
+requests==2.31.0
+
+# Logging & Debugging
+loguru==0.7.2
+
+# For optional JSON schema validation
+jsonschema==4.21.1
+
+# For data preprocessing (if needed)
+nltk==3.8.1
+
+# Security & Safety (if expanding)
+openai==1.30.1  # Optional, only if fallback models used
+
+# Python version compatibility
+typing-extensions==4.11.0
+
