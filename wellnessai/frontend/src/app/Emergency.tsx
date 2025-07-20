@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Card, CardHeader, CardContent, CardTitle } from "../../components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent, CardTitle } from "../components/ui/card";
 
 export default function EmergencyPage() {
     const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);

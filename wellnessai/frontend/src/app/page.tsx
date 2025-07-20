@@ -1,6 +1,6 @@
 // src/app/page.tsx
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 
@@ -24,4 +24,8 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
-        </
+        </CardContent>
+      </Card>
+    </main>
+  );
+}
