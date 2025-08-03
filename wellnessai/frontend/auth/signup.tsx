@@ -1,3 +1,4 @@
+"use client";
 export default function SignupPage() {
   return (
     <main className="p-6 max-w-sm mx-auto">

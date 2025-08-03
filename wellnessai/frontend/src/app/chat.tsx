@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { Card } from "react-bootstrap";
 import { SendHorizonal } from "lucide-react";

@@ -1,3 +1,4 @@
+"use client";
 export default function SettingsPage() {
   return (
     <main className="p-6 space-y-4">

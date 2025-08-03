@@ -1,3 +1,4 @@
+"use client";
 export default function MapPage() {
   return (
     <main className="min-h-screen p-4 bg-blue-50 flex flex-col items-center">

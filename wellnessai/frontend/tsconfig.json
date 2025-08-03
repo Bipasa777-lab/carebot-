@@ -12,15 +12,21 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
-    "types": ["node"],                            // ✅ Needed for 'path' and '__dirname'
-    "baseUrl": ".",                               // ✅ Enables alias support
+    "baseUrl": ".", 
     "paths": {
-      "@/*": ["src/*"] ,                           // ✅ Allows imports like "@/components/Button"
+      "@/*": ["src/*"],
       "@components/*": ["src/components/*"]
-    }
+    },
+    "types": ["node"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src",
+    "vite.config.ts",
+    "env.d.ts",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
 }

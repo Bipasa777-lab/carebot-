@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 
 // ✅ Safely remove trailing slashes and provide default fallback URLs

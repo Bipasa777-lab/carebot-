@@ -1,3 +1,4 @@
+"use client";
 // File: src/lib/utils.ts
 
 /**
