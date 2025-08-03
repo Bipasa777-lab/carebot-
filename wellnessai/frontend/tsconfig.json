@@ -17,7 +17,8 @@
     "types": ["node"],                            // ✅ Needed for 'path' and '__dirname'
     "baseUrl": ".",                               // ✅ Enables alias support
     "paths": {
-      "@/*": ["src/*"]                            // ✅ Allows imports like "@/components/Button"
+      "@/*": ["src/*"] ,                           // ✅ Allows imports like "@/components/Button"
+      "@components/*": ["src/components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

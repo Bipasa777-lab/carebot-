@@ -1,31 +1,54 @@
-"use client";
-import Link from "next/link";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
 
-export default function LandingPage() {
-    return (
-        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-white p-4">
-            <Card className="w-full max-w-3xl shadow-2xl rounded-3xl text-center">
-                <CardHeader>
-                    <CardTitle className="text-3xl font-bold text-green-800">
-                        Welcome to WellnessAI 🌿
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 px-6 pb-8">
-                    <p className="text-gray-700 text-lg">
-                        Your private, AI-powered medical assistant that delivers fast, expert health advice anytime, anywhere.
-                    </p>
-                    <div className="flex justify-center">
-                        <Link href="/chat">
-                            <Button size="lg" className="text-white bg-green-600 hover:bg-green-700 rounded-full px-6 py-2">
-                                Get Started <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </Link>
-                    </div>
-                </CardContent>
-            </Card>
-        </main>
-    );
+export default function Home() {
+  return (
+    <main className="bg-sky-100 min-h-screen px-8 py-12 font-sans">
+      <nav className="flex justify-between items-center mb-16">
+        <h1 className="text-3xl font-bold">caRebot</h1>
+        <div className="space-x-6">
+          <a href="#" className="text-black font-medium hover:underline">
+            FAQ
+          </a>
+          <a href="#" className="text-black font-medium hover:underline">
+            About
+          </a>
+          <a href="#" className="text-black font-medium hover:underline">
+            Sign In
+          </a>
+          <Button className="bg-gray-300 text-black rounded-full px-4 py-2 hover:bg-gray-400">
+            Sign Up
+          </Button>
+        </div>
+      </nav>
+
+      <section className="flex flex-col md:flex-row items-center justify-between">
+        <div className="max-w-lg">
+          <h2 className="text-xl text-sky-700 font-semibold mb-2">
+            With <span className="font-bold">CaRebot</span>, Every Health Issue Finds a Cure
+          </h2>
+          <h1 className="text-5xl md:text-6xl font-bold text-blue-900 leading-tight">
+            your <span className="text-white">AI health</span> companion
+          </h1>
+          <p className="mt-6 text-gray-800 text-lg">
+            <span className="text-4xl text-black font-serif">“</span>CaReBot is your intelligent
+            health companion, designed to guide, support, and simplify healthcare by providing
+            smart solutions to everyday health issues—anytime, anywhere.
+          </p>
+          <Button className="mt-6 bg-sky-300 hover:bg-sky-400 text-black px-6 py-2 rounded-full">
+            Join Today →
+          </Button>
+        </div>
+
+        <div className="mt-10 md:mt-0">
+          <img
+            src="/robot.png"
+            alt="AI Robot"
+            className="w-[300px] h-auto mx-auto"
+          />
+          <p className="text-sm text-gray-700 text-right mt-2">Stay Healthy, Stay Smart with CaReBot</p>
+        </div>
+      </section>
+    </main>
+  );
 }
