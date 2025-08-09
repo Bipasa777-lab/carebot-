@@ -1,7 +1,6 @@
 "use client";
-
-import ChatWindow from "./components/ChatWindow"; // relative path
-
+import React from "react";
+import ChatWindow from "./components/ChatWindow"; // Adjust path if needed
 
 export default function Home() {
   return (
