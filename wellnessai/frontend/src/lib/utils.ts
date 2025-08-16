@@ -1,10 +1,7 @@
-"use client";
-// File: src/lib/utils.ts
+import { clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-/**
- * Merges Tailwind class names conditionally.
- * Used by ShadCN UI components for dynamic styling.
- */
-export function cn(...classes: (string | undefined | null | false)[]) {
-  return classes.filter(Boolean).join(" ");
+// Merge Tailwind + conditional classes safely
+export function cn(...inputs: any[]) {
+  return twMerge(clsx(inputs))
 }

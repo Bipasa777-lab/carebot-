@@ -1,8 +1,13 @@
-/* app/globals.css */
+/* src/app/globals.css */
+
+/* Tailwind base styles (if you're using Tailwind) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Custom global styles */
 body {
-  font-family: sans-serif;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
 }

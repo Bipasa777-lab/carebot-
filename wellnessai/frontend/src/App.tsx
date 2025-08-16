@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import ChatWindow from "./components/ChatWindow"; // Adjust path if needed
+import Link from "next/link";
+import ChatWindow from "./components/ChatWindow";
 
 export default function Home() {
   return (
@@ -12,6 +12,18 @@ export default function Home() {
         Your AI-powered medical chatbot is ready to assist you.
       </p>
 
+      {/* Navigation Menu */}
+      <nav className="mb-8 flex gap-6">
+        <Link href="/pharmacy" className="text-blue-600 hover:underline">Pharmacy</Link>
+        <Link href="/library" className="text-green-600 hover:underline">src/app/Library</Link>
+        <Link href="/police" className="text-red-600 hover:underline">Police Station</Link>
+        <Link href="/Landing" className="text-red-600 hover:underline">src/app/Landing</Link>
+        <Link href="/about" className="text-red-600 hover:underline">src/app/about</Link>
+        <Link href="/card" className="text-red-600 hover:underline">components/ui/card</Link>
+        <Link href="/button" className="text-red-600 hover:underline">components/ui/button</Link>
+      </nav>
+
+      {/* Chat Window */}
       <div className="w-full max-w-2xl shadow-lg rounded-xl border border-zinc-300 bg-white">
         <ChatWindow />
       </div>
