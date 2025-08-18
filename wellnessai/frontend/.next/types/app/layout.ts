@@ -1,4 +1,4 @@
-// File: X:\edupulse\edupulse-ai-tracker\carebot-\wellnessai\frontend\src\app\layout.tsx
+// File: X:\carebot\carebot-\wellnessai\frontend\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -14,7 +14,7 @@ export default function Navbar() {
 
         {/* Menu */}
         <div className="flex items-center gap-6">
-          <Link href="/faq" className="text-black font-medium hover:text-gray-700">
+          <Link href="src/app/faq" className="text-black font-medium hover:text-gray-700">
             FAQ
           </Link>
           <Link href="/about" className="text-black font-medium hover:text-gray-700">
