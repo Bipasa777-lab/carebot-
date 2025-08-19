@@ -1,24 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
+  const pathname = usePathname(); // To track current route
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+  // Function to check if link is active
+  const isActive = (href: string) => pathname === href;
 
   return (
     <nav
@@ -34,24 +35,43 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href="/home" className="text-black font-medium hover:text-gray-700">
+          <Link
+            href="/home"
+            className={`text-black font-medium hover:text-gray-700 ${
+              isActive("/home") ? "underline decoration-2 underline-offset-2" : ""
+            }`}
+          >
             Dashboard
           </Link>
-          <Link href="/faq" className="text-black font-medium hover:text-gray-700">
+          <Link
+            href="/faq"
+            className={`text-black font-medium hover:text-gray-700 ${
+              isActive("/faq") ? "underline decoration-2 underline-offset-2" : ""
+            }`}
+          >
             FAQ
           </Link>
-          <Link href="/about" className="text-black font-medium hover:text-gray-700">
+          <Link
+            href="/about"
+            className={`text-black font-medium hover:text-gray-700 ${
+              isActive("/about") ? "underline decoration-2 underline-offset-2" : ""
+            }`}
+          >
             About
           </Link>
           <Link
-            href="/signin"
-            className="bg-cyan-300 px-5 py-2 rounded-full font-medium text-black hover:bg-cyan-400 transition"
+            href="/auth/signin"
+            className={`px-5 py-2 rounded-full font-medium text-black hover:bg-cyan-400 transition ${
+              isActive("/auth/signin") ? "bg-cyan-400" : "bg-cyan-300"
+            }`}
           >
             Sign In
           </Link>
           <Link
             href="/signup"
-            className="bg-cyan-300 px-5 py-2 rounded-full font-medium text-black hover:bg-cyan-400 transition"
+            className={`px-5 py-2 rounded-full font-medium text-black hover:bg-cyan-400 transition ${
+              isActive("/signup") ? "bg-cyan-400" : "bg-cyan-300"
+            }`}
           >
             Sign Up
           </Link>
@@ -69,17 +89,29 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden w-full bg-cyan-200 shadow-lg">
           <div className="flex flex-col items-center py-4 space-y-4">
-            <Link href="/home" className="text-black font-medium text-lg hover:text-gray-700" onClick={toggleMobileMenu}>
+            <Link
+              href="/home"
+              className="text-black font-medium text-lg hover:text-gray-700"
+              onClick={toggleMobileMenu}
+            >
               Dashboard
             </Link>
-            <Link href="/faq" className="text-black font-medium text-lg hover:text-gray-700" onClick={toggleMobileMenu}>
+            <Link
+              href="/faq"
+              className="text-black font-medium text-lg hover:text-gray-700"
+              onClick={toggleMobileMenu}
+            >
               FAQ
             </Link>
-            <Link href="/about" className="text-black font-medium text-lg hover:text-gray-700" onClick={toggleMobileMenu}>
+            <Link
+              href="/about"
+              className="text-black font-medium text-lg hover:text-gray-700"
+              onClick={toggleMobileMenu}
+            >
               About
             </Link>
             <Link
-              href="/signin"
+              href="/auth/signin"
               className="bg-cyan-300 px-6 py-2 rounded-full font-medium text-black hover:bg-cyan-400 transition"
               onClick={toggleMobileMenu}
             >

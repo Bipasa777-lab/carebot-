@@ -5,56 +5,75 @@ import { Button } from "@/components/ui/button";
 export const Frame = (): JSX.Element => {
   return (
     <main className="bg-[#bcf3f3] min-h-screen w-full flex justify-center">
-      <div className="w-full max-w-[1440px] relative flex flex-col items-center px-4 sm:px-8 md:px-12">
-
-        {/* Header Section */}
-        <header className="text-center mt-16 md:mt-28 max-w-4xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4 text-white">
-            With <span className="text-[#0c0966]">CaReBot</span>, Every Health Issue Finds a Cure
-          </h2>
-          <h1 className="text-4xl sm:text-5xl md:text-[120px] font-normal text-[#0c0966] sm:text-shadow-lg leading-tight">
-            your <span className="text-white">AI </span>health companion
-          </h1>
-        </header>
-
-        {/* Hero Section */}
-        <section className="w-full flex flex-col-reverse md:flex-row items-center justify-between mt-12 md:mt-20 relative">
-          
-          {/* Text Content */}
-          <div className="flex-1 md:pr-8 mt-8 md:mt-0">
-            <p className="text-lg sm:text-xl md:text-2xl font-medium text-black mb-6 max-w-md">
-              CaReBot is your intelligent health companion, designed to guide, support, and simplify healthcare by providing smart solutions to everyday health issues—anytime, anywhere.
-            </p>
-
-            <Button className="bg-[#6cf0f2] hover:bg-[#5ce0e2] text-black font-medium px-6 py-3 rounded-2xl shadow-md flex items-center space-x-3">
-              <span className="text-lg sm:text-xl font-medium">Join Today</span>
-              <ArrowRightIcon className="w-5 h-5" />
-            </Button>
-          </div>
-
-          {/* Robot Image */}
-          <div className="flex-1 flex justify-center md:justify-end">
+      <div className="bg-[#bcf3f3] overflow-hidden w-full max-w-[1440px] h-[1027px] relative">
+        
+        <section className="absolute w-[1049px] h-[468px] top-[556px] left-0">
+          <div className="absolute w-[1024px] h-[370px] top-[98px] left-[25px]">
             <img
+              className="absolute w-[657px] h-[370px] top-0 left-[367px] object-cover"
+              alt="Untitled design"
               src="/robot.svg"
-              alt="Robot"
-              className="w-full max-w-sm md:max-w-md lg:max-w-lg object-contain"
             />
+
+            <p className="absolute w-[407px] top-[23px] left-0 [font-family:'Outfit',Helvetica] font-medium text-black text-3xl tracking-[0] leading-[normal]">
+              CaReBot is your intelligent health companion, designed to guide,
+              support, and simplify healthcare by providing smart solutions to
+              everyday health issues—anytime, anywhere.
+            </p>
           </div>
+
+          <div className="absolute w-[210px] top-0 left-0 [font-family:'Outfit',Helvetica] font-medium text-black text-[150px] tracking-[0] leading-[normal] whitespace-nowrap">
+            &quot;
+          </div>
+
+          <Button className="absolute w-[207px] h-[43px] top-[379px] left-[51px] bg-[#6cf0f2] rounded-[40px] border border-solid shadow-[4px_4px_6px_#000000b2] hover:bg-[#5ce0e2]">
+            <div className="relative w-[162px] h-[30px] flex items-center justify-between">
+              <span className="[font-family:'Outfit',Helvetica] font-medium text-black text-2xl tracking-[0] leading-[normal]">
+                Join Today
+              </span>
+              <ArrowRightIcon className="w-[13px] h-[19px] text-black" />
+            </div>
+          </Button>
         </section>
 
-        {/* Social Media Section with Tagline */}
-        <aside className="w-full mt-8 md:mt-0 flex flex-col md:items-end items-center text-center md:text-right space-y-2">
-          <p className="text-lg sm:text-xl font-medium text-black">Stay Healthy, Stay Smart</p>
-          <p className="text-lg sm:text-xl font-medium text-black">with CaReBot</p>
+        {/* Header Section */}
+        <header className="absolute w-full max-w-[1251px] top-[187px] left-1/2 transform -translate-x-1/2 text-center">
+          <h2 className="w-full [font-family:'Outfit',Helvetica] font-medium text-transparent text-6xl tracking-[0] leading-[normal] mb-6">
+            <span className="text-white">With </span>
+            <span className="text-[#0c0966]">CaRebot</span>
+            <span className="text-white">, Every Health Issue Finds a Cure</span>
+          </h2>
 
-          <div className="flex space-x-4 mt-2">
-            <FacebookIcon className="w-8 h-8 text-blue-600 cursor-pointer hover:scale-110 transition-transform" />
-            <TwitterIcon className="w-8 h-8 text-black cursor-pointer hover:scale-110 transition-transform" />
-            <InstagramIcon className="w-8 h-8 text-pink-500 cursor-pointer hover:scale-110 transition-transform" />
-            <YoutubeIcon className="w-8 h-8 text-red-600 cursor-pointer hover:scale-110 transition-transform" />
+          <h1 className="[text-shadow:4px_4px_4px_#00000040] [font-family:'Outfit',Helvetica] font-normal text-transparent text-[120px] leading-[normal]">
+            <span className="text-[#0c0966]">your </span>
+            <span className="text-white">AI </span>
+            <span className="text-[#0c0966]">health companion</span>
+          </h1>
+        </header>
+        
+        {/* Social Media Section with Tagline */}
+        <aside className="absolute bottom-5 right-10 flex flex-col items-end space-y-3">
+          {/* Short Line Above Social Icons */}
+          <h1>
+          <p className="[font-family:'Outfit',Helvetica] font-medium  text-black text-3xl tracking-[0] leading-[normal]">
+            Stay Healthy,
+          </p>
+          </h1>
+          <h2>
+            <p className="[font-family:'Outfit',Helvetica] font-medium  text-black text-3xl tracking-[0] leading-[normal]">
+             Stay Smart with CaReBot
+          </p>
+          </h2>
+
+          {/* Social Media Icons */}
+          <div className="flex space-x-6">
+            <FacebookIcon className="w-[40px] h-[40px] text-blue-600 cursor-pointer hover:scale-110 transition" />
+            <TwitterIcon className="w-[40px] h-[40px] text-black cursor-pointer hover:scale-110 transition" />
+            <InstagramIcon className="w-[40px] h-[40px] text-pink-500 cursor-pointer hover:scale-110 transition" />
+            <YoutubeIcon className="w-[40px] h-[40px] text-red-600 cursor-pointer hover:scale-110 transition" />
           </div>
         </aside>
-
+        
       </div>
     </main>
   );
