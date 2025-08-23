@@ -86,29 +86,13 @@ export default function HomePage(): JSX.Element {
             <Button
               onClick={toggleSidebar}
               variant="ghost"
-              className="p-2 bg-[#bcf3f3] hover:bg-[#a0e8e8] rounded-lg transition-all cursor-pointer hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.2)]"
+              className="p-2 bg-[#bcf3f3] hover:bg-[#a0e8e8] rounded-lg transition-colors"
             >
               <img src="/menu.svg" alt="Menu" className="w-8 h-8 object-contain" />
             </Button>
 
-<<<<<<< HEAD
-=======
-            {/* Desktop Navigation Items */}
-            <div className="hidden md:flex items-center gap-[40px]">
-              {topNavItems.map((item, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className="h-auto p-3 font-medium text-black text-lg md:text-[20px] hover:bg-[#ffffff40] rounded-lg transition-all cursor-pointer hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.3)]"
-                >
-                  {item.name}
-                </Button>
-              ))}
-            </div>
-
->>>>>>> d8722e0b725966098301d356fb2bbf08f8245c1e
             {/* User Avatar */}
-            <Avatar className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full border border-solid border-black ml-4 sm:ml-8 cursor-pointer hover:scale-105 transition-transform hover:shadow-[0_0_12px_rgba(0,0,0,0.3)]">
+            <Avatar className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full border border-solid border-black ml-4 sm:ml-8">
               <AvatarImage src="/user.svg" alt="User" />
               <AvatarFallback>
                 <UserIcon className="w-6 h-6 sm:w-7 sm:h-7" />
@@ -116,22 +100,6 @@ export default function HomePage(): JSX.Element {
             </Avatar>
           </nav>
 
-<<<<<<< HEAD
-=======
-          {/* ✅ Mobile FAQ/About/Contact */}
-          <div className="flex flex-col md:hidden px-4 sm:px-6 gap-4 mb-6">
-            {topNavItems.map((item, index) => (
-              <Button
-                key={index}
-                variant="ghost"
-                className="w-full bg-white/70 text-black font-medium py-3 rounded-xl transition-all cursor-pointer hover:bg-[#a0e8e8] hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.2)]"
-              >
-                {item.name}
-              </Button>
-            ))}
-          </div>
-
->>>>>>> d8722e0b725966098301d356fb2bbf08f8245c1e
           {/* ✅ Sidebar Overlay */}
           {isSidebarOpen && (
             <div
@@ -155,7 +123,7 @@ export default function HomePage(): JSX.Element {
                 <Button
                   onClick={toggleSidebar}
                   variant="ghost"
-                  className="p-2 hover:bg-gray-100 rounded-lg cursor-pointer hover:scale-110 transition-all"
+                  className="p-2 hover:bg-gray-100 rounded-lg"
                 >
                   <X className="w-8 h-8 text-black" />
                 </Button>
@@ -163,7 +131,6 @@ export default function HomePage(): JSX.Element {
 
               {/* Sidebar Menu Items */}
               <div className="space-y-4 mb-8">
-<<<<<<< HEAD
                 <Button
                   onClick={() => {
                     router.push("/chatassistant"); // ✅ Navigate to Chat Assistant page
@@ -197,24 +164,6 @@ export default function HomePage(): JSX.Element {
                     Nearby Pharmacy
                   </span>
                 </Button>
-=======
-                {[
-                  { icon: <MessageCircle className="w-7 h-7 mr-3 text-black" />, label: "Chat Assistant" },
-                  { icon: <Building2 className="w-7 h-7 mr-3 text-black" />, label: "Nearby Hospital" },
-                  { icon: <Pill className="w-7 h-7 mr-3 text-black" />, label: "Nearby Pharmacy" },
-                ].map((item, index) => (
-                  <Button
-                    key={index}
-                    variant="ghost"
-                    className="w-full justify-start p-4 rounded-lg transition-all cursor-pointer hover:bg-[#bcf3f3] hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.25)]"
-                  >
-                    {item.icon}
-                    <span className="text-lg font-medium text-black [font-family:'Outfit',Helvetica]">
-                      {item.label}
-                    </span>
-                  </Button>
-                ))}
->>>>>>> d8722e0b725966098301d356fb2bbf08f8245c1e
               </div>
 
               {/* Recent Chats */}
@@ -229,7 +178,7 @@ export default function HomePage(): JSX.Element {
                   {recentChats.map((chat, index) => (
                     <div
                       key={index}
-                      className="p-3 bg-gray-50 rounded-lg transition-all cursor-pointer hover:bg-gray-100 hover:scale-[1.02] hover:shadow-[0_0_10px_rgba(0,0,0,0.2)]"
+                      className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-black text-sm [font-family:'Outfit',Helvetica]">
@@ -254,7 +203,7 @@ export default function HomePage(): JSX.Element {
               {hospitals.map((hospital, index) => (
                 <Card
                   key={index}
-                  className="w-full bg-white/60 border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02]"
+                  className="w-full bg-white/60 border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow"
                 >
                   <CardContent className="p-0 flex flex-col sm:flex-row">
                     <div className="w-full sm:w-1/3">
@@ -273,7 +222,7 @@ export default function HomePage(): JSX.Element {
                         <p>🕒 {hospital.timing}</p>
                         <p>📞 {hospital.phone}</p>
                       </div>
-                      <Button className="mt-6 bg-[#bcf3f3] text-black font-medium px-6 py-2 rounded-lg transition-all cursor-pointer hover:bg-[#a0e8e8] hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.25)]">
+                      <Button className="mt-6 bg-[#bcf3f3] hover:bg-[#a0e8e8] text-black font-medium px-6 py-2 rounded-lg transition-colors">
                         View Details
                       </Button>
                     </div>
@@ -292,7 +241,7 @@ export default function HomePage(): JSX.Element {
               {pharmacies.map((pharmacy, index) => (
                 <Card
                   key={index}
-                  className="w-full bg-white/60 border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02]"
+                  className="w-full bg-white/60 border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow"
                 >
                   <CardContent className="p-0 flex flex-col sm:flex-row">
                     <div className="w-full sm:w-1/3">
@@ -311,7 +260,7 @@ export default function HomePage(): JSX.Element {
                         <p>🕒 {pharmacy.timing}</p>
                         <p>📞 {pharmacy.phone}</p>
                       </div>
-                      <Button className="mt-6 bg-[#bcf3f3] text-black font-medium px-6 py-2 rounded-lg transition-all cursor-pointer hover:bg-[#a0e8e8] hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.25)]">
+                      <Button className="mt-6 bg-[#bcf3f3] hover:bg-[#a0e8e8] text-black font-medium px-6 py-2 rounded-lg transition-colors">
                         View Details
                       </Button>
                     </div>
@@ -325,7 +274,6 @@ export default function HomePage(): JSX.Element {
         {/* ✅ Footer */}
         <footer className="bg-white/60 border-t border-gray-200 py-6 mt-6">
           <div className="flex justify-center space-x-8">
-<<<<<<< HEAD
             <a href="#" className="text-black hover:text-blue-600 transition-colors">
               <Facebook className="w-7 h-7" />
             </a>
@@ -341,22 +289,6 @@ export default function HomePage(): JSX.Element {
             <a href="#" className="text-black hover:text-blue-700 transition-colors">
               <Linkedin className="w-7 h-7" />
             </a>
-=======
-            {[ 
-              { icon: <Facebook className="w-7 h-7" />, color: "hover:text-blue-600" },
-              { icon: <Instagram className="w-7 h-7" />, color: "hover:text-pink-500" },
-              { icon: <Twitter className="w-7 h-7" />, color: "hover:text-blue-400" },
-              { icon: <Youtube className="w-7 h-7" />, color: "hover:text-red-600" },
-            ].map((item, index) => (
-              <a
-                key={index}
-                href="#"
-                className={`text-black transition-all cursor-pointer hover:scale-110 hover:shadow-[0_0_12px_rgba(0,0,0,0.3)] ${item.color}`}
-              >
-                {item.icon}
-              </a>
-            ))}
->>>>>>> d8722e0b725966098301d356fb2bbf08f8245c1e
           </div>
         </footer>
       </div>
