@@ -11,6 +11,7 @@ import {
   Instagram,
   Twitter,
   Youtube,
+  Linkedin,
 } from "lucide-react";
 import React from "react";
 import {
@@ -20,12 +21,7 @@ import {
 } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
-
-const topNavItems = [
-  { name: "FAQ", active: false },
-  { name: "About", active: false },
-  { name: "Contact Us", active: false },
-];
+import { useRouter } from "next/navigation"; // ✅ Import Router
 
 const hospitals = [
   {
@@ -73,12 +69,14 @@ const recentChats = [
 
 export default function HomePage(): JSX.Element {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const router = useRouter(); // ✅ Initialize router
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
     <div className="bg-[#bcf3f3] min-h-screen w-full flex justify-center">
       <div className="bg-[#bcf3f3] w-full max-w-[1440px] min-h-screen relative overflow-hidden flex flex-col">
+        
         {/* Main Content */}
         <div className="flex-grow w-full h-full bg-[#ffffff80] rounded-[50px] mx-4 sm:mx-8 my-4 sm:my-8 overflow-y-auto">
           
@@ -93,19 +91,6 @@ export default function HomePage(): JSX.Element {
               <img src="/menu.svg" alt="Menu" className="w-8 h-8 object-contain" />
             </Button>
 
-            {/* Desktop Navigation Items */}
-            <div className="hidden md:flex items-center gap-[40px]">
-              {topNavItems.map((item, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className="h-auto p-3 font-medium text-black text-lg md:text-[20px] hover:bg-[#ffffff40] rounded-lg transition-colors"
-                >
-                  {item.name}
-                </Button>
-              ))}
-            </div>
-
             {/* User Avatar */}
             <Avatar className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full border border-solid border-black ml-4 sm:ml-8">
               <AvatarImage src="/user.svg" alt="User" />
@@ -114,19 +99,6 @@ export default function HomePage(): JSX.Element {
               </AvatarFallback>
             </Avatar>
           </nav>
-
-          {/* ✅ Mobile FAQ/About/Contact */}
-          <div className="flex flex-col md:hidden px-4 sm:px-6 gap-4 mb-6">
-            {topNavItems.map((item, index) => (
-              <Button
-                key={index}
-                variant="ghost"
-                className="w-full bg-white/70 text-black font-medium py-3 rounded-xl hover:bg-[#a0e8e8] transition-colors"
-              >
-                {item.name}
-              </Button>
-            ))}
-          </div>
 
           {/* ✅ Sidebar Overlay */}
           {isSidebarOpen && (
@@ -160,6 +132,10 @@ export default function HomePage(): JSX.Element {
               {/* Sidebar Menu Items */}
               <div className="space-y-4 mb-8">
                 <Button
+                  onClick={() => {
+                    router.push("/chatassistant"); // ✅ Navigate to Chat Assistant page
+                    setIsSidebarOpen(false);
+                  }}
                   variant="ghost"
                   className="w-full justify-start p-4 hover:bg-[#bcf3f3] rounded-lg transition-colors"
                 >
@@ -309,6 +285,9 @@ export default function HomePage(): JSX.Element {
             </a>
             <a href="#" className="text-black hover:text-red-600 transition-colors">
               <Youtube className="w-7 h-7" />
+            </a>
+            <a href="#" className="text-black hover:text-blue-700 transition-colors">
+              <Linkedin className="w-7 h-7" />
             </a>
           </div>
         </footer>
