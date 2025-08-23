@@ -68,9 +68,9 @@ export default function Navbar() {
             Sign In
           </Link>
           <Link
-            href="/signup"
+            href="/auth/signup"
             className={`px-5 py-2 rounded-full font-medium text-black hover:bg-cyan-400 transition ${
-              isActive("/signup") ? "bg-cyan-400" : "bg-cyan-300"
+              isActive("/auth/signup") ? "bg-cyan-400" : "bg-cyan-300"
             }`}
           >
             Sign Up
@@ -118,7 +118,7 @@ export default function Navbar() {
               Sign In
             </Link>
             <Link
-              href="/signup"
+              href="/auth/signup"
               className="bg-cyan-300 px-6 py-2 rounded-full font-medium text-black hover:bg-cyan-400 transition"
               onClick={toggleMobileMenu}
             >
