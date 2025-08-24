@@ -1,4 +1,4 @@
-// File: E:\Python, and my own intrested things\CareBot\wellnessai\frontend\src\app\faq\page.tsx
+// File: X:\carebot\carebot-\wellnessai\frontend\src\app\faq\page.tsx
 import * as entry from '../../../../src/app/faq/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
