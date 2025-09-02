@@ -91,8 +91,11 @@ export default function HomePage(): JSX.Element {
               <img src="/menu.svg" alt="Menu" className="w-8 h-8 object-contain" />
             </Button>
 
-            {/* User Avatar */}
-            <Avatar className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full border border-solid border-black ml-4 sm:ml-8">
+            {/* ✅ User Avatar → Go to Profile Page */}
+            <Avatar
+              onClick={() => router.push("/profile")}
+              className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] rounded-full border border-solid border-black ml-4 sm:ml-8 cursor-pointer hover:scale-105 transition-transform"
+            >
               <AvatarImage src="/user.svg" alt="User" />
               <AvatarFallback>
                 <UserIcon className="w-6 h-6 sm:w-7 sm:h-7" />
@@ -108,7 +111,7 @@ export default function HomePage(): JSX.Element {
             />
           )}
 
-          {/* ✅ Sidebar */}
+          {/* Sidebar */}
           <div
             className={`fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
               isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -133,7 +136,7 @@ export default function HomePage(): JSX.Element {
               <div className="space-y-4 mb-8">
                 <Button
                   onClick={() => {
-                    router.push("/chatassistant"); // ✅ Navigate to Chat Assistant page
+                    router.push("/chatassistant"); 
                     setIsSidebarOpen(false);
                   }}
                   variant="ghost"
