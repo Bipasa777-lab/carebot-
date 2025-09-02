@@ -9,7 +9,7 @@ const errorHandler = require('./src/middleware/errorHandler');
 const authRoutes = require('./src/routes/auth');
 const chatRoutes = require('./src/routes/chat');
 const emergencyRoutes = require('./src/routes/emergency');
-const hospitalRoutes = require('./src/routes/hospitals');
+const hospitalRoutes = require('./src/routes/hospital');
 const userRoutes = require('./src/routes/users');
 
 const app = express();

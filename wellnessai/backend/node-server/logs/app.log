@@ -1,0 +1,3 @@
+[2025-09-02T14:27:30.471Z] WARN: Validation failed during signup
+[2025-09-02T14:28:11.193Z] INFO: New user registered: test@example.com
+[2025-09-02T14:37:28.149Z] INFO: Signup attempt with existing email: test@example.com

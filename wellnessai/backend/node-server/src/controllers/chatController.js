@@ -1,6 +1,6 @@
 const ChatHistory = require('../models/ChatHistory');
 const aiService = require('../services/aiService');
-const medicalValidator = require('../utils/validator');
+const medicalValidator = require('../utils/validation');
 const logger = require('../utils/logger');
 
 // POST /api/chat/message
