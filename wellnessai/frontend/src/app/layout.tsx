@@ -10,14 +10,16 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen">
+      {/* 👇 add suppressHydrationWarning here */}
+      <body className="min-h-screen" suppressHydrationWarning={true}>
         <Navbar />
         <div className="pt-16">{children}</div>
       </body>
     </html>
-  );
+  )
 }
+

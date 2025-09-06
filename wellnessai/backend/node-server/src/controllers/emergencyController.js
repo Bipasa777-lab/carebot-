@@ -1,6 +1,6 @@
 const EmergencyContact = require('../models/EmergencyContact');
-const locationService = require('../services/locationService');
-const emergencyService = require('../services/emergencyService');
+const locationService = require('../services/locationServices');
+const emergencyService = require('../services/emergencyServices');
 const logger = require('../utils/logger');
 
 // POST /api/emergency/trigger

@@ -51,6 +51,8 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+<<<<<<< HEAD
+=======
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/building-2.js":
 /*!****************************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/building-2.js ***!
@@ -71,6 +73,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+>>>>>>> 8998f946700bf9da04a8a64c6f17cd07607f6a78
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/facebook.js":
 /*!**************************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/facebook.js ***!
@@ -91,6 +94,8 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+<<<<<<< HEAD
+=======
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/linkedin.js":
 /*!**************************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/linkedin.js ***!
@@ -101,6 +106,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+>>>>>>> 8998f946700bf9da04a8a64c6f17cd07607f6a78
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/menu.js":
 /*!**********************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/menu.js ***!
@@ -111,6 +117,8 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+<<<<<<< HEAD
+=======
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/message-circle.js":
 /*!********************************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/message-circle.js ***!
@@ -141,6 +149,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+>>>>>>> 8998f946700bf9da04a8a64c6f17cd07607f6a78
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/twitter.js":
 /*!*************************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/twitter.js ***!
@@ -151,6 +160,8 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+<<<<<<< HEAD
+=======
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/user.js":
 /*!**********************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/user.js ***!
@@ -161,6 +172,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+>>>>>>> 8998f946700bf9da04a8a64c6f17cd07607f6a78
 /***/ "(ssr)/./node_modules/lucide-react/dist/esm/icons/x.js":
 /*!*******************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/x.js ***!

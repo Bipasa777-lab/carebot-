@@ -1,100 +1,150 @@
 "use client";
-import axios from "axios";
+import axios from 'axios';
 
-// ✅ Safely remove trailing slashes and provide default fallback URLs
-const API_BASE_URL =
-  (process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "")) ||
-  "http://localhost:3000/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-const AI_SERVER_URL =
-  (process.env.NEXT_PUBLIC_AI_SERVER_URL?.replace(/\/+$/, "")) ||
-  "http://localhost:8000/api";
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 10000, // 10 second timeout
+});
 
-/**
- * Send message to the AI (Flask server)
- */
-export async function sendMedicalQuery(message: string, userId: string) {
-  try {
-    const response = await axios.post(`${AI_SERVER_URL}/medical-chat`, {
-      message,
-      user_id: userId,
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Error sending medical query:", error);
-    throw error;
+// Request interceptor to add auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-}
+);
 
-/**
- * Register a new user
- */
-export async function registerUser(
-  email: string,
-  password: string,
-  firstName: string,
-  lastName: string
-) {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/auth/register`, {
-      email,
-      password,
-      profile: {
-        firstName,
-        lastName,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Registration error:", error);
-    throw error;
+// Response interceptor to handle auth errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      // Redirect to login page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login';
+      }
+    }
+    return Promise.reject(error);
   }
-}
+);
 
-/**
- * Log in an existing user
- */
-export async function loginUser(email: string, password: string) {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-      email,
-      password,
-    });
+// Auth API functions
+export const authAPI = {
+  // Sign up
+  signup: async (userData: {
+    fullName: string;
+    email: string;
+    mobileNumber: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
+    const response = await api.post('/auth/signup', userData);
     return response.data;
-  } catch (error: any) {
-    console.error("Login error:", error);
-    throw error;
-  }
-}
+  },
 
-/**
- * Get user profile
- */
-export async function fetchUserProfile(token: string) {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/users/profile`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  // Login
+  login: async (credentials: {
+    emailOrMobile: string;
+    password: string;
+  }) => {
+    const response = await api.post('/auth/login', credentials);
     return response.data;
-  } catch (error: any) {
-    console.error("Error fetching profile:", error);
-    throw error;
-  }
-}
+  },
 
-/**
- * Fetch nearby hospitals
- */
-export async function fetchNearbyHospitals(lat: number, lng: number) {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/hospitals/nearby`, {
-      params: { lat, lng },
-    });
+  // Get user profile
+  getProfile: async () => {
+    const response = await api.get('/auth/profile');
     return response.data;
-  } catch (error: any) {
-    console.error("Error fetching hospitals:", error);
-    throw error;
-  }
-}
+  },
+
+  // Update user profile
+  updateProfile: async (profileData: {
+    fullName?: string;
+    email?: string;
+    mobileNumber?: string;
+    location?: string;
+  }) => {
+    const response = await api.put('/auth/profile', profileData);
+    return response.data;
+  },
+};
+
+// Chat API functions
+export const chatAPI = {
+  sendMessage: async (message: string, sessionId?: string) => {
+    const response = await api.post('/chat/message', { message, sessionId });
+    return response.data;
+  },
+
+  getHistory: async (sessionId: string) => {
+    const response = await api.get(`/chat/history/${sessionId}`);
+    return response.data;
+  },
+};
+
+// Emergency API functions
+export const emergencyAPI = {
+  triggerEmergency: async (location?: { latitude: number; longitude: number }) => {
+    const response = await api.post('/emergency/trigger', { location });
+    return response.data;
+  },
+
+  getNearbyHospitals: async (latitude: number, longitude: number) => {
+    const response = await api.get(`/emergency/nearby-hospitals?lat=${latitude}&lng=${longitude}`);
+    return response.data;
+  },
+
+  getContacts: async () => {
+    const response = await api.get('/emergency/contacts');
+    return response.data;
+  },
+};
+
+// Hospital API functions
+export const hospitalAPI = {
+  getAllHospitals: async () => {
+    const response = await api.get('/hospitals');
+    return response.data;
+  },
+
+  getHospitalById: async (id: string) => {
+    const response = await api.get(`/hospitals/${id}`);
+    return response.data;
+  },
+
+  getNearby: async (latitude: number, longitude: number) => {
+    const response = await api.get(`/hospitals/nearby?lat=${latitude}&lng=${longitude}`);
+    return response.data;
+  },
+
+  createHospital: async (hospitalData: any) => {
+    const response = await api.post('/hospitals', hospitalData);
+    return response.data;
+  },
+
+  updateHospital: async (id: string, hospitalData: any) => {
+    const response = await api.put(`/hospitals/${id}`, hospitalData);
+    return response.data;
+  },
+
+  deleteHospital: async (id: string) => {
+    const response = await api.delete(`/hospitals/${id}`);
+    return response.data;
+  },
+};
+
+export default api;
