@@ -1,66 +1,80 @@
+"use client";
+
 import { ClockIcon, SendIcon } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
+import { Separator } from "../../components/ui/separator";
+import { useRouter } from "next/navigation";
 
 const locationSuggestions = [{ name: "New Town" }, { name: "Bagbazar" }];
 
-export const Frame = (): JSX.Element => {
+export default function Frame(): JSX.Element {
+  const router = useRouter();
+  const [location, setLocation] = useState("");
+
+  const handleSend = () => {
+    if (location.trim() !== "") {
+      router.push(`/hospital?page=1&location=${encodeURIComponent(location)}`);
+    } else {
+      router.push(`/hospital`);
+    }
+  };
+
   return (
-    <div className="bg-[#bcf3f3] grid justify-items-center [align-items:start] w-screen">
-      <div className="bg-[#bcf3f3] overflow-hidden w-[1440px] h-[1024px] relative">
-        <div className="absolute w-[1090px] h-[259px] top-[97px] left-[175px]">
-          <Card className="w-[1090px] h-[189px] bg-[#d9d9d9e8] rounded-[50px] absolute top-0 left-0 shadow-[0px_0px_8px_4px_#00000040] border-0">
-            <CardContent className="flex items-center justify-center h-full p-0">
-              <div className="w-[740px] [text-shadow:0px_0px_9px_#9ad4d9] [font-family:'Outfit',Helvetica] font-medium text-[#00000099] text-6xl tracking-[0] leading-[normal] text-center">
-                Please specify your location
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+    <div className="min-h-screen w-full bg-[#bcf3f3] flex items-start justify-center p-4">
+      <div className="w-full max-w-5xl space-y-8">
+        {/* Title Card */}
+        <Card className="bg-[#d9d9d9e8] rounded-3xl shadow-md border-0">
+          <CardContent className="flex items-center justify-center p-6">
+            <h1 className="text-center text-xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-black/70">
+              Please specify your location
+            </h1>
+          </CardContent>
+        </Card>
 
-        <div className="absolute w-[1290px] h-[154px] top-[413px] left-[163px]">
-          <Card className="w-[1114px] h-[99px] bg-[#d9d9d961] rounded-[40px] absolute top-0 left-0 shadow-[0px_0px_8px_4px_#00000040] border-0">
-            <CardContent className="flex items-center h-full p-0 relative">
-              <Input
-                className="w-full h-full bg-transparent border-0 pl-[41px] pr-[100px] opacity-60 [font-family:'Outfit',Helvetica] font-normal text-black text-[25px] tracking-[0] leading-[normal] placeholder:opacity-60 placeholder:[font-family:'Outfit',Helvetica] placeholder:font-normal placeholder:text-black placeholder:text-[25px] placeholder:tracking-[0] placeholder:leading-[normal] focus-visible:ring-0 focus-visible:ring-offset-0"
-                placeholder="search your location here"
-                defaultValue=""
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-[26px] w-[52px] h-[52px] p-0 hover:bg-transparent"
-              >
-                <SendIcon className="w-[52px] h-[52px]" />
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Search Bar */}
+        <Card className="bg-[#d9d9d961] rounded-2xl shadow-md border-0">
+          <CardContent className="flex items-center relative p-2">
+            <Input
+              className="w-full bg-transparent border-0 pl-4 pr-12 text-base sm:text-lg md:text-xl placeholder:text-black/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Search your location here"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSend}
+              className="absolute right-3 w-10 h-10 sm:w-12 sm:h-12 hover:bg-transparent"
+            >
+              <SendIcon className="w-6 h-6 sm:w-7 sm:h-7" />
+            </Button>
+          </CardContent>
+        </Card>
 
-        <Card className="absolute w-[1279px] h-[379px] top-[568px] left-20 bg-[#ffffff6b] rounded-[70px] border-0">
-          <CardContent className="p-0 h-full">
-            <div className="absolute w-[1157px] h-[237px] top-[23px] left-[81px]">
-              {locationSuggestions.map((location, index) => (
-                <div key={location.name} className="flex items-center">
-                  <ClockIcon
-                    className="absolute w-[25px] h-[25px] top-[26px] left-[18px]"
-                    style={{ top: `${26 + index * 43}px` }}
-                  />
-                  <div
-                    className="absolute w-[1086px] left-[71px] [font-family:'Outfit',Helvetica] font-light text-[#00000080] text-[25px] tracking-[0] leading-[normal]"
-                    style={{ top: `${index === 0 ? 0 : 54}px` }}
-                  >
-                    {location.name}
-                  </div>
+        {/* Suggestions */}
+        <Card className="bg-white/60 rounded-3xl border-0 shadow-sm">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-4">
+              {locationSuggestions.map((loc, index) => (
+                <div
+                  key={loc.name}
+                  className="flex items-center gap-3 cursor-pointer hover:text-black text-black/70"
+                  onClick={() => setLocation(loc.name)}
+                >
+                  <ClockIcon className="w-5 h-5 shrink-0" />
+                  <span className="text-base sm:text-lg md:text-xl">
+                    {loc.name}
+                  </span>
                 </div>
               ))}
-              
+              <Separator className="bg-black/30" />
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
   );
-};
+}
