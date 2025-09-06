@@ -9,6 +9,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 second timeout
 });
 
 // Request interceptor to add auth token
@@ -32,7 +33,10 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/auth/login';
+      // Redirect to login page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login';
+      }
     }
     return Promise.reject(error);
   }
@@ -81,38 +85,64 @@ export const authAPI = {
 
 // Chat API functions
 export const chatAPI = {
-  sendMessage: async (message: string) => {
-    const response = await api.post('/chat/message', { message });
+  sendMessage: async (message: string, sessionId?: string) => {
+    const response = await api.post('/chat/message', { message, sessionId });
     return response.data;
   },
 
-  getHistory: async () => {
-    const response = await api.get('/chat/history');
+  getHistory: async (sessionId: string) => {
+    const response = await api.get(`/chat/history/${sessionId}`);
     return response.data;
   },
 };
 
 // Emergency API functions
 export const emergencyAPI = {
-  getContacts: async () => {
-    const response = await api.get('/emergency/contacts');
+  triggerEmergency: async (location?: { latitude: number; longitude: number }) => {
+    const response = await api.post('/emergency/trigger', { location });
     return response.data;
   },
 
-  addContact: async (contact: {
-    name: string;
-    phone: string;
-    relationship: string;
-  }) => {
-    const response = await api.post('/emergency/contacts', contact);
+  getNearbyHospitals: async (latitude: number, longitude: number) => {
+    const response = await api.get(`/emergency/nearby-hospitals?lat=${latitude}&lng=${longitude}`);
+    return response.data;
+  },
+
+  getContacts: async () => {
+    const response = await api.get('/emergency/contacts');
     return response.data;
   },
 };
 
 // Hospital API functions
 export const hospitalAPI = {
+  getAllHospitals: async () => {
+    const response = await api.get('/hospitals');
+    return response.data;
+  },
+
+  getHospitalById: async (id: string) => {
+    const response = await api.get(`/hospitals/${id}`);
+    return response.data;
+  },
+
   getNearby: async (latitude: number, longitude: number) => {
     const response = await api.get(`/hospitals/nearby?lat=${latitude}&lng=${longitude}`);
+    return response.data;
+  },
+
+  createHospital: async (hospitalData: any) => {
+    const response = await api.post('/hospitals', hospitalData);
+    return response.data;
+  },
+
+  updateHospital: async (id: string, hospitalData: any) => {
+    const response = await api.put(`/hospitals/${id}`, hospitalData);
+    return response.data;
+  },
+
+  deleteHospital: async (id: string) => {
+    const response = await api.delete(`/hospitals/${id}`);
     return response.data;
   },
 };
