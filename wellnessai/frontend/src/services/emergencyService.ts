@@ -37,6 +37,28 @@ const emergencyService = {
     }
   },
 
+  // Public OSM Overpass API for nearby pharmacies (no API key required)
+  getNearbyPharmacies: async (latitude: number, longitude: number): Promise<any[]> => {
+    // Search within 3000 meters
+    const radiusMeters = 3000;
+    const query = `data=[out:json];node[amenity=pharmacy](around:${radiusMeters},${latitude},${longitude});out center;`;
+    const url = `https://overpass-api.de/api/interpreter?${query}`;
+    try {
+      const res = await fetch(url);
+      const json = await res.json();
+      const elements = json?.elements || [];
+      return elements.map((el: any) => ({
+        id: el.id,
+        name: el.tags?.name || 'Pharmacy',
+        latitude: el.lat,
+        longitude: el.lon,
+        address: [el.tags?.addr_street, el.tags?.addr_housenumber, el.tags?.addr_city].filter(Boolean).join(' '),
+      }));
+    } catch (error: any) {
+      throw { message: 'Error fetching nearby pharmacies' };
+    }
+  },
+
   getContacts: async (): Promise<EmergencyContact[]> => {
     try {
       const response = await api.get('/emergency/contacts');

@@ -35,7 +35,7 @@ api.interceptors.response.use(
       localStorage.removeItem('user');
       // Redirect to login page
       if (typeof window !== 'undefined') {
-        window.location.href = '/auth/login';
+        window.location.href = '/auth/signin';
       }
     }
     return Promise.reject(error);
@@ -79,6 +79,21 @@ export const authAPI = {
     location?: string;
   }) => {
     const response = await api.put('/auth/profile', profileData);
+    return response.data;
+  },
+};
+
+// Users API functions (profile-specific updates)
+export const usersAPI = {
+  updateProfile: async (profileData: {
+    profile?: {
+      avatar?: string;
+      location?: string;
+      firstName?: string;
+      lastName?: string;
+    };
+  }) => {
+    const response = await api.put('/users/profile', profileData);
     return response.data;
   },
 };
