@@ -11,6 +11,7 @@ const chatRoutes = require('./src/routes/chat');
 const emergencyRoutes = require('./src/routes/emergency');
 const hospitalRoutes = require('./src/routes/hospital');
 const userRoutes = require('./src/routes/users');
+const meditronRoutes = require('./src/routes/meditron');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/emergency', emergencyRoutes);
 app.use('/api/hospitals', hospitalRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api', meditronRoutes);
 
 // Error handling
 app.use(errorHandler);
