@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { MapPin, Phone, Star, Clock, ExternalLink, Navigation } from "lucide-react";
+import { MapPin, Phone, Star, Clock, ExternalLink, Navigation, MessageCircle } from "lucide-react";
 import { LocationService, Hospital, Pharmacy, Location } from "../services/locationService";
+import Link from "next/link";
 
 interface DashboardProps {
   userLocation?: Location;
@@ -105,6 +106,30 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
 
   return (
     <div className="space-y-6">
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MessageCircle className="h-5 w-5" />
+            Quick Actions
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/chatassistant">
+              <Button className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4" />
+                Chat with Medical AI
+              </Button>
+            </Link>
+            <Button variant="outline" className="flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              Find Emergency Services
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Location Header */}
       <Card>
         <CardHeader>

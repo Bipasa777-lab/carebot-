@@ -70,13 +70,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (emailOrMobile: string, password: string) => {
     try {
       const response = await authAPI.login({ emailOrMobile, password });
-      const { token, user } = response;
       
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setUser(user);
+      if (response.success && response.token && response.user) {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        setUser(response.user);
+      } else {
+        throw new Error(response.error || 'Login failed');
+      }
     } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Login failed');
+      console.error('Login error:', error);
+      
+      // Handle network errors specifically
+      if (error.code === 'NETWORK_ERROR' || error.message.includes('Network Error') || error.message.includes('fetch')) {
+        throw new Error('Cannot connect to server. Please make sure the auth server is running on http://localhost:5000');
+      }
+      
+      // Handle API errors
+      if (error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      
+      // Handle other errors
+      throw new Error(error.message || 'Login failed. Please try again.');
     }
   };
 
@@ -89,13 +105,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }) => {
     try {
       const response = await authAPI.signup(userData);
-      const { token, user } = response;
       
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setUser(user);
+      if (response.success && response.token && response.user) {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        setUser(response.user);
+      } else {
+        throw new Error(response.error || 'Signup failed');
+      }
     } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Signup failed');
+      console.error('Signup error:', error);
+      
+      // Handle network errors specifically
+      if (error.code === 'NETWORK_ERROR' || error.message.includes('Network Error') || error.message.includes('fetch')) {
+        throw new Error('Cannot connect to server. Please make sure the auth server is running on http://localhost:5000');
+      }
+      
+      // Handle API errors
+      if (error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      
+      // Handle other errors
+      throw new Error(error.message || 'Signup failed. Please try again.');
     }
   };
 

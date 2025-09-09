@@ -44,7 +44,9 @@ const SignupPage = () => {
 
     try {
       await signup(formData);
-      router.push("/dashboard"); // Redirect to dashboard after successful signup
+      // Redirect to dashboard after successful signup
+      router.push("/dashboard");
+      router.refresh(); // Force refresh to update navbar
     } catch (error: any) {
       setError(error.message || "An error occurred during signup");
     } finally {

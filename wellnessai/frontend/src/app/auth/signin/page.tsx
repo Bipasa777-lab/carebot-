@@ -34,7 +34,9 @@ const LoginPage = () => {
 
     try {
       await login(formData.emailOrMobile, formData.password);
-      router.push("/dashboard"); // Redirect to dashboard after successful login
+      // Redirect to dashboard after successful login
+      router.push("/dashboard");
+      router.refresh(); // Force refresh to update navbar
     } catch (error: any) {
       setError(error.message || "An error occurred during login");
     } finally {

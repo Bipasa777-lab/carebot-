@@ -38,14 +38,6 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-          <Link
-            href="/chatassistant"
-            className={`text-black font-medium hover:text-gray-700 ${
-              isActive("/chatassistant") ? "underline decoration-2 underline-offset-2" : ""
-            }`}
-          >
-            Chat Assistant
-          </Link>
           {user && (
             <Link
               href="/dashboard"
@@ -122,13 +114,6 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden w-full bg-cyan-200 shadow-lg">
           <div className="flex flex-col items-center py-4 space-y-4">
-            <Link
-              href="/chatassistant"
-              className="text-black font-medium text-lg hover:text-gray-700"
-              onClick={toggleMobileMenu}
-            >
-              Chat Assistant
-            </Link>
             {user && (
               <Link
                 href="/dashboard"
