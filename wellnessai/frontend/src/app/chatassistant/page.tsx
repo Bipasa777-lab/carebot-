@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
+import { sendMedicalChat } from "../../services/meditronService";
 
 const ChatAssistantPage = (): JSX.Element => {
   const languages = ["Hindi", "Bengali", "Telugu", "Marathi", "Tamil", "English"];
@@ -18,6 +19,29 @@ const ChatAssistantPage = (): JSX.Element => {
 
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [input, setInput] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
+
+  const handleSend = async () => {
+    const text = (input || selectedQuestion || "").trim();
+    if (!text || loading) return;
+    setMessages((prev) => [...prev, { role: "user", content: text }]);
+    setSelectedQuestion(null);
+    setInput("");
+    setLoading(true);
+    try {
+      const data = await sendMedicalChat(text);
+      const reply = data?.response?.message || data?.error || "No response received from medical AI.";
+      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
+    } catch (e: any) {
+      console.error("Chat error:", e);
+      const errorMsg = e.message || "Failed to connect to medical AI. Please check if the backend server is running.";
+      setMessages((prev) => [...prev, { role: "assistant", content: `Error: ${errorMsg}` }]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-[#cff2f1] min-h-screen w-full flex justify-center">
@@ -64,6 +88,11 @@ const ChatAssistantPage = (): JSX.Element => {
               </Button>
 
               <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSend();
+                }}
                 placeholder="Share your health concern here..."
                 className="flex-1 border-none bg-transparent text-base sm:text-lg md:text-xl font-normal text-black opacity-80 [font-family:'Outfit',Helvetica] placeholder:text-black placeholder:opacity-60 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
@@ -72,7 +101,7 @@ const ChatAssistantPage = (): JSX.Element => {
                 <Button variant="ghost" size="icon" className="h-auto p-2">
                   <MicIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-auto p-2">
+                <Button variant="ghost" size="icon" className="h-auto p-2" onClick={handleSend} disabled={loading}>
                   <SendIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </Button>
               </div>
@@ -86,7 +115,10 @@ const ChatAssistantPage = (): JSX.Element => {
                 {sampleQuestions.map((question, index) => (
                   <div
                     key={index}
-                    onClick={() => setSelectedQuestion(question)}
+                    onClick={() => {
+                      setSelectedQuestion(question);
+                      setInput(question);
+                    }}
                     className={`p-3 rounded-lg cursor-pointer transition-colors ${
                       selectedQuestion === question
                         ? "bg-[#d1f7f6] text-black font-semibold"
@@ -99,6 +131,21 @@ const ChatAssistantPage = (): JSX.Element => {
               </div>
             </CardContent>
           </Card>
+
+          {/* messages view */}
+          <div className="w-full max-w-[900px] mt-6">
+            <Card className="bg-white/70 shadow-md border-none">
+              <CardContent className="p-4 space-y-3">
+                {messages.map((m, i) => (
+                  <div key={i} className="text-black">
+                    <span className="font-semibold mr-2">{m.role === "user" ? "You" : "Assistant"}:</span>
+                    <span>{m.content}</span>
+                  </div>
+                ))}
+                {loading && <div className="text-black/70">Thinking…</div>}
+              </CardContent>
+            </Card>
+          </div>
         </main>
       </div>
     </div>

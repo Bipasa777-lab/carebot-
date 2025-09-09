@@ -8,10 +8,11 @@ import { Card } from "@/components/ui/card";
 import { FacebookIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import authService from "../../../services/authService";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const SignupPage = () => {
   const router = useRouter();
+  const { signup } = useAuth();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -42,14 +43,10 @@ const SignupPage = () => {
     }
 
     try {
-      const response = await authService.signup(formData);
-      if (response?.token) {
-        router.push("/profile"); // Redirect to profile/dashboard after successful signup
-      } else {
-        setError(response?.error || response?.message || "Signup failed");
-      }
+      await signup(formData);
+      router.push("/dashboard"); // Redirect to dashboard after successful signup
     } catch (error: any) {
-      setError(error?.error || error?.message || "An error occurred during signup");
+      setError(error.message || "An error occurred during signup");
     } finally {
       setLoading(false);
     }

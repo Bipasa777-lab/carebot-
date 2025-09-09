@@ -9,6 +9,7 @@ from flask_cors import CORS
 import requests
 import logging
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -17,9 +18,32 @@ CORS(app)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configuration
-OLLAMA_BASE_URL = "http://localhost:11434"
-MODEL_NAME = "meditron"
+# Configuration (overridable via environment variables)
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+MODEL_NAME = os.getenv("MEDITRON_MODEL", "meditron")
+
+
+def ensure_ollama_and_model():
+    """Ensure Ollama is reachable and the model is available; pull if missing."""
+    try:
+        logger.info(f"Checking Ollama at {OLLAMA_BASE_URL}...")
+        tags_response = requests.get(f"{OLLAMA_BASE_URL}/api/tags", timeout=10)
+        tags_response.raise_for_status()
+        tags = tags_response.json().get("models", [])
+        model_names = {m.get("name", "") for m in tags}
+        if MODEL_NAME not in model_names and f"{MODEL_NAME}:latest" not in model_names:
+            logger.info(f"Model '{MODEL_NAME}' not found. Pulling from registry...")
+            pull_response = requests.post(
+                f"{OLLAMA_BASE_URL}/api/pull",
+                json={"name": MODEL_NAME},
+                timeout=60,
+            )
+            pull_response.raise_for_status()
+            logger.info("Model pull initiated/completed successfully.")
+        else:
+            logger.info(f"Model '{MODEL_NAME}' is available.")
+    except Exception as e:
+        logger.warning(f"Could not verify or pull model from Ollama automatically: {e}")
 
 @app.route('/api/medical-chat', methods=['POST'])
 def medical_chat():
@@ -139,6 +163,15 @@ def health_check():
             'timestamp': datetime.utcnow().isoformat()
         }), 500
 
+
+@app.before_first_request
+def _warm_start():
+    """On first request, ensure backend connectivity and model availability."""
+    try:
+        ensure_ollama_and_model()
+    except Exception as e:
+        logger.warning(f"Warm start check failed: {e}")
+
 if __name__ == '__main__':
     print("🚀 Starting WellnessAI Meditron Server...")
     print(f"📡 Ollama URL: {OLLAMA_BASE_URL}")
@@ -148,5 +181,10 @@ if __name__ == '__main__':
     print("  - POST /api/medical-chat (WellnessAI format)")
     print("  - POST /api/meditron (Direct format)")
     print("  - GET /health (Health check)")
+    # Try to ensure connectivity and model availability at boot as well.
+    try:
+        ensure_ollama_and_model()
+    except Exception as e:
+        logger.warning(f"Startup check failed: {e}")
     
     app.run(host='0.0.0.0', port=8000, debug=True)

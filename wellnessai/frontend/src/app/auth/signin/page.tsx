@@ -8,10 +8,11 @@ import { FacebookIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import authService from "../../../services/authService";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const LoginPage = () => {
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     emailOrMobile: "",
     password: "",
@@ -32,12 +33,8 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const response = await authService.login(formData);
-      if (response.success) {
-        router.push("/chat"); // Redirect to chat after successful login
-      } else {
-        setError(response.message || "Login failed");
-      }
+      await login(formData.emailOrMobile, formData.password);
+      router.push("/dashboard"); // Redirect to dashboard after successful login
     } catch (error: any) {
       setError(error.message || "An error occurred during login");
     } finally {

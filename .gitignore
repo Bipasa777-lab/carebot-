@@ -1,1 +1,35 @@
+# Dependencies
+node_modules/
+venv/
+**/__pycache__/
+
+# Builds/outputs
+dist/
+build/
+.next/
+.turbo/
+.vercel/
+
+# Environment/config
+.env
+.env.*
+*.local
+
+# Logs
+logs/
+*.log
+
+# Editors/OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-wheel-metadata/
+
 node_modules

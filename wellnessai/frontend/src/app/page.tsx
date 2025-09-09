@@ -65,18 +65,29 @@ export const Frame = (): JSX.Element => {
               />
             </div>
 
-            {/* Glowing Button */}
-            <div className="flex justify-center md:justify-start">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Button
                 className="rounded-[40px] border border-solid 
               shadow-[0_0_15px_#6cf0f2,0_0_30px_#6cf0f2] 
               bg-[#6cf0f2] animate-pulse hover:scale-105 transition duration-300"
+                onClick={() => window.location.href = '/auth/signup'}
               >
                 <div className="flex items-center space-x-3">
                   <span className="font-medium text-black text-lg md:text-xl lg:text-2xl leading-normal">
                     Join Today
                   </span>
                   <ArrowRightIcon className="w-5 h-5 text-black" />
+                </div>
+              </Button>
+              
+              <Button
+                variant="outline"
+                className="rounded-[40px] border-2 border-[#0c0966] text-[#0c0966] hover:bg-[#0c0966] hover:text-white transition duration-300"
+                onClick={() => window.location.href = '/chatassistant'}
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium text-lg">Try Chat Assistant</span>
                 </div>
               </Button>
             </div>
