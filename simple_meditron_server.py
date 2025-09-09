@@ -42,8 +42,12 @@ def ensure_ollama_and_model():
             logger.info("Model pull initiated/completed successfully.")
         else:
             logger.info(f"Model '{MODEL_NAME}' is available.")
+        return True
     except Exception as e:
-        logger.warning(f"Could not verify or pull model from Ollama automatically: {e}")
+        logger.error(f"Ollama connection failed: {e}")
+        logger.error("Please ensure Ollama is running: ollama serve")
+        logger.error(f"Then pull the model: ollama pull {MODEL_NAME}")
+        return False
 
 @app.route('/api/medical-chat', methods=['POST'])
 def medical_chat():
@@ -58,6 +62,20 @@ def medical_chat():
         
         logger.info(f"Medical query from {user_id}: {user_message[:50]}...")
         
+        # Check if Ollama is available first
+        try:
+            ollama_check = requests.get(f"{OLLAMA_BASE_URL}/api/tags", timeout=5)
+            if ollama_check.status_code != 200:
+                raise Exception("Ollama is not responding")
+        except Exception as e:
+            logger.error(f"Ollama connection failed: {e}")
+            return jsonify({
+                'error': 'Medical AI service is currently unavailable',
+                'fallback': 'Please ensure Ollama is running and try again. For immediate medical concerns, please consult a healthcare professional.',
+                'details': 'Ollama server is not accessible. Please run: ollama serve',
+                'timestamp': datetime.utcnow().isoformat()
+            }), 503
+        
         # Call Meditron via Ollama API
         ollama_response = requests.post(
             f"{OLLAMA_BASE_URL}/api/generate",
@@ -70,7 +88,10 @@ def medical_chat():
         )
         
         if ollama_response.status_code != 200:
-            raise Exception(f"Ollama API error: {ollama_response.status_code}")
+            error_msg = f"Ollama API error: {ollama_response.status_code}"
+            if ollama_response.status_code == 404:
+                error_msg += f" - Model '{MODEL_NAME}' not found. Please run: ollama pull {MODEL_NAME}"
+            raise Exception(error_msg)
         
         result = ollama_response.json()
         
@@ -94,6 +115,7 @@ def medical_chat():
         return jsonify({
             'error': 'Unable to process medical query',
             'fallback': 'Please consult a healthcare professional for this concern.',
+            'details': str(e),
             'timestamp': datetime.utcnow().isoformat()
         }), 500
 
@@ -164,27 +186,29 @@ def health_check():
         }), 500
 
 
-@app.before_first_request
-def _warm_start():
-    """On first request, ensure backend connectivity and model availability."""
-    try:
-        ensure_ollama_and_model()
-    except Exception as e:
-        logger.warning(f"Warm start check failed: {e}")
+# Remove deprecated before_first_request - we'll call ensure_ollama_and_model on startup instead
 
 if __name__ == '__main__':
-    print("🚀 Starting WellnessAI Meditron Server...")
+    print("🚀 Starting CareBot Medical AI Server...")
     print(f"📡 Ollama URL: {OLLAMA_BASE_URL}")
     print(f"🤖 Model: {MODEL_NAME}")
     print("🌐 Server will run on http://localhost:8000")
     print("📋 Endpoints:")
-    print("  - POST /api/medical-chat (WellnessAI format)")
-    print("  - POST /api/meditron (Direct format)")
+    print("  - POST /api/medical-chat (Medical chat with Ollama)")
+    print("  - POST /api/meditron (Direct Ollama access)")
     print("  - GET /health (Health check)")
-    # Try to ensure connectivity and model availability at boot as well.
-    try:
-        ensure_ollama_and_model()
-    except Exception as e:
-        logger.warning(f"Startup check failed: {e}")
+    print("=" * 50)
     
+    # Ensure connectivity and model availability at startup
+    print("🔍 Checking Ollama connection...")
+    ollama_ready = ensure_ollama_and_model()
+    
+    if ollama_ready:
+        print("✅ Ollama is ready! Medical AI chat is available.")
+    else:
+        print("⚠️  Ollama not ready. Medical AI chat will show error messages.")
+        print("   To fix: Run 'ollama serve' and 'ollama pull meditron'")
+    
+    print("=" * 50)
+    print("🌐 Starting server...")
     app.run(host='0.0.0.0', port=8000, debug=True)
