@@ -43,13 +43,13 @@ const SignupPage = () => {
 
     try {
       const response = await authService.signup(formData);
-      if (response.success) {
-        router.push("/chat"); // Redirect to chat after successful signup
+      if (response?.token) {
+        router.push("/profile"); // Redirect to profile/dashboard after successful signup
       } else {
-        setError(response.message || "Signup failed");
+        setError(response?.error || response?.message || "Signup failed");
       }
     } catch (error: any) {
-      setError(error.message || "An error occurred during signup");
+      setError(error?.error || error?.message || "An error occurred during signup");
     } finally {
       setLoading(false);
     }
