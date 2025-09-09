@@ -89,3 +89,4 @@ Check browser network tab for:
 ✅ Chat page loads for authenticated users
 ✅ Messages send and receive responses
 ✅ Session persists across page reloads
+

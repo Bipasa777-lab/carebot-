@@ -2,7 +2,8 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { authAPI } from "@/lib/api";
 import { Camera } from "lucide-react";
 
 export default function ProfilePage() {
@@ -13,6 +14,25 @@ export default function ProfilePage() {
     mobile: "",
     location: "",
   });
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const data = await authAPI.getProfile();
+        const user = data.user || data;
+        setFormData({
+          username: user?.fullName || "",
+          email: user?.email || "",
+          password: "",
+          mobile: user?.mobileNumber || "",
+          location: user?.profile?.location || "",
+        });
+      } catch (e) {
+        // ignore for now; unauthenticated users will see empty fields
+      }
+    };
+    loadProfile();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

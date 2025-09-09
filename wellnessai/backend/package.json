@@ -2,11 +2,11 @@
   "name": "wellnessai-node-server",
   "version": "1.0.0",
   "description": "API server for WellnessAI - Medical AI Assistant",
-  "main": "server.js",
+  "main": "node-server/server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node node-server/server.js",
+    "dev": "nodemon node-server/server.js",
     "lint": "eslint .",
     "test": "jest"
   },
