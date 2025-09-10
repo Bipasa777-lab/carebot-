@@ -9,14 +9,14 @@ pip install flask flask-cors requests
 echo ✅ Python dependencies installed
 
 echo.
-echo [2/4] Installing Node.js dependencies...
+echo [2/4] Installing Frontend dependencies...
 cd wellnessai\frontend
 npm install
 cd ..\..
-echo ✅ Node.js dependencies installed
+echo ✅ Frontend dependencies installed
 
 echo.
-echo [3/4] Starting Authentication Server (Port 5000)...
+echo [3/4] Starting Authentication Server (Python on 5000)...
 start "Auth Server" cmd /k "python simple_auth_server.py"
 timeout /t 3 /nobreak >nul
 echo ✅ Auth server started
@@ -34,7 +34,7 @@ echo    🎉 CareBot is ready!
 echo ========================================
 echo.
 echo Services Running:
-echo - Auth Server: http://localhost:5000
+echo - Auth Server: http://localhost:5000/api
 echo - Frontend: http://localhost:3000
 echo.
 echo User Journey:

@@ -2,11 +2,11 @@
 echo Starting CareBot Servers...
 
 echo.
-echo Starting Flask Backend (Port 8000)...
-start "Flask Backend" cmd /k "python simple_meditron_server.py"
+echo Starting Auth Server (Python, Port 5000)...
+start "Auth Server" cmd /k "python simple_auth_server.py"
 
 echo.
-echo Waiting 3 seconds for backend to start...
+echo Waiting 3 seconds for auth server to start...
 timeout /t 3 /nobreak > nul
 
 echo.
@@ -16,7 +16,7 @@ start "Frontend" cmd /k "npm run dev"
 
 echo.
 echo Both servers are starting...
-echo Backend: http://localhost:8000
+echo Auth Server: http://localhost:5000/api
 echo Frontend: http://localhost:3000
 echo.
 echo Press any key to exit...
