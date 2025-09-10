@@ -131,7 +131,23 @@ export class LocationService {
     location: Location,
     radius: number = 10
   ): Promise<Hospital[]> {
-    // Mock data - in production, this would call your backend API
+    try {
+      // Try to fetch from backend API first
+      const response = await fetch(
+        `http://localhost:5001/api/hospitals/nearby?lat=${location.latitude}&lng=${location.longitude}&radius=${radius}`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.hospitals) {
+          return data.hospitals;
+        }
+      }
+    } catch (error) {
+      console.warn('Backend API unavailable, using fallback data:', error);
+    }
+
+    // Fallback to mock data if backend is unavailable
     const mockHospitals: Hospital[] = [
       {
         id: "1",
@@ -191,7 +207,23 @@ export class LocationService {
     location: Location,
     radius: number = 5
   ): Promise<Pharmacy[]> {
-    // Mock data - in production, this would call your backend API
+    try {
+      // Try to fetch from backend API first
+      const response = await fetch(
+        `http://localhost:5001/api/pharmacies/nearby?lat=${location.latitude}&lng=${location.longitude}&radius=${radius}`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.pharmacies) {
+          return data.pharmacies;
+        }
+      }
+    } catch (error) {
+      console.warn('Backend API unavailable, using fallback data:', error);
+    }
+
+    // Fallback to mock data if backend is unavailable
     const mockPharmacies: Pharmacy[] = [
       {
         id: "1",

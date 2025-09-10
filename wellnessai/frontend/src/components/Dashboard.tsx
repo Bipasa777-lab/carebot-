@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { MapPin, Phone, Star, Clock, ExternalLink, Navigation, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Star, Clock, ExternalLink, Navigation, MessageCircle, RefreshCw, User } from "lucide-react";
 import { LocationService, Hospital, Pharmacy, Location } from "../services/locationService";
 import Link from "next/link";
 
@@ -17,14 +17,35 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [locationName, setLocationName] = useState<string>("");
 
   useEffect(() => {
     if (location) {
       loadNearbyServices();
+      getLocationName();
     } else {
       getCurrentLocation();
     }
   }, []);
+
+  const getLocationName = async () => {
+    if (!location) return;
+    
+    try {
+      // Use reverse geocoding to get location name
+      const response = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${location.latitude}&longitude=${location.longitude}&localityLanguage=en`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        setLocationName(`${data.city}, ${data.principalSubdivision}, ${data.countryName}`);
+      }
+    } catch (error) {
+      console.log("Could not get location name, using coordinates");
+      setLocationName(`Lat: ${location.latitude.toFixed(4)}, Lng: ${location.longitude.toFixed(4)}`);
+    }
+  };
 
   const getCurrentLocation = async () => {
     setLoading(true);
@@ -33,6 +54,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
       const currentLocation = await LocationService.getCurrentLocation();
       setLocation(currentLocation);
       await loadNearbyServices(currentLocation);
+      await getLocationName();
     } catch (err: any) {
       setError(err.message);
       console.error("Location error:", err);
@@ -82,8 +104,8 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Getting your location...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0c0966] mx-auto mb-4"></div>
+          <p className="text-[#0c0966] font-medium">Getting your location...</p>
         </div>
       </div>
     );
@@ -97,7 +119,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
           <p className="text-lg font-semibold">Location Error</p>
           <p className="text-sm">{error}</p>
         </div>
-        <Button onClick={getCurrentLocation} variant="outline">
+        <Button onClick={getCurrentLocation} variant="outline" className="border-[#0c0966] text-[#0c0966] hover:bg-[#6cf0f2]">
           Try Again
         </Button>
       </div>
@@ -107,9 +129,9 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
   return (
     <div className="space-y-6">
       {/* Quick Actions */}
-      <Card>
+      <Card className="bg-white/80 backdrop-blur-sm border-[#6cf0f2] shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-[#0c0966]">
             <MessageCircle className="h-5 w-5" />
             Quick Actions
           </CardTitle>
@@ -117,12 +139,12 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
         <CardContent>
           <div className="flex flex-wrap gap-4">
             <Link href="/chatassistant">
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2 bg-[#6cf0f2] hover:bg-[#5ae0e2] text-black border-0 shadow-[0_0_15px_#6cf0f2]">
                 <MessageCircle className="h-4 w-4" />
                 Chat with Medical AI
               </Button>
             </Link>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2 border-[#0c0966] text-[#0c0966] hover:bg-[#6cf0f2]">
               <MapPin className="h-4 w-4" />
               Find Emergency Services
             </Button>
@@ -131,30 +153,50 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
       </Card>
 
       {/* Location Header */}
-      <Card>
+      <Card className="bg-white/80 backdrop-blur-sm border-[#6cf0f2] shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-[#0c0966]">
             <MapPin className="h-5 w-5" />
-            Your Location
+            Your Current Location
           </CardTitle>
         </CardHeader>
         <CardContent>
           {location ? (
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">
-                  Lat: {location.latitude.toFixed(4)}, Lng: {location.longitude.toFixed(4)}
+                <p className="text-sm text-gray-700 font-medium">
+                  📍 {locationName || `Lat: ${location.latitude.toFixed(4)}, Lng: ${location.longitude.toFixed(4)}`}
                 </p>
-                <p className="text-xs text-gray-500">
-                  Showing nearby hospitals and pharmacies
+                <p className="text-xs text-gray-600 mt-1">
+                  Showing nearby hospitals and pharmacies within 10km radius
                 </p>
+                <div className="flex items-center gap-4 mt-2 text-xs text-gray-600">
+                  <span className="flex items-center gap-1">
+                    <User className="h-3 w-3" />
+                    User-specific location
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Navigation className="h-3 w-3" />
+                    Real-time detection
+                  </span>
+                </div>
               </div>
-              <Button onClick={getCurrentLocation} variant="outline" size="sm">
+              <Button 
+                onClick={getCurrentLocation} 
+                variant="outline" 
+                size="sm"
+                className="border-[#0c0966] text-[#0c0966] hover:bg-[#6cf0f2]"
+              >
+                <RefreshCw className="h-4 w-4 mr-1" />
                 Refresh
               </Button>
             </div>
           ) : (
-            <Button onClick={getCurrentLocation} className="w-full">
+            <Button 
+              onClick={getCurrentLocation} 
+              className="w-full bg-[#6cf0f2] hover:bg-[#5ae0e2] text-black border-0 shadow-[0_0_15px_#6cf0f2]"
+            >
+              <MapPin className="h-4 w-4 mr-2" />
               Get My Location
             </Button>
           )}
@@ -162,17 +204,17 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
       </Card>
 
       {/* Hospitals Section */}
-      <Card>
+      <Card className="bg-white/80 backdrop-blur-sm border-[#6cf0f2] shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-[#0c0966]">
             <MapPin className="h-5 w-5 text-red-500" />
-            Nearby Hospitals
+            Nearby Hospitals ({hospitals.length} found)
           </CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-4">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#0c0966] mx-auto mb-2"></div>
               <p className="text-sm text-gray-600">Loading hospitals...</p>
             </div>
           ) : hospitals.length > 0 ? (
@@ -180,13 +222,13 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
               {hospitals.map((hospital) => (
                 <div
                   key={hospital.id}
-                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white/60 backdrop-blur-sm border-[#6cf0f2]"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-lg">{hospital.name}</h3>
+                    <h3 className="font-semibold text-lg text-[#0c0966]">{hospital.name}</h3>
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm">{hospital.rating}</span>
+                      <span className="text-sm font-medium">{hospital.rating}</span>
                     </div>
                   </div>
                   
@@ -205,7 +247,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
                     
                     <div className="flex items-center gap-2">
                       <Navigation className="h-4 w-4" />
-                      <span>{hospital.distance?.toFixed(1)} km away</span>
+                      <span className="font-medium text-[#0c0966]">{hospital.distance?.toFixed(1)} km away</span>
                     </div>
                     
                     {hospital.specialties && (
@@ -213,7 +255,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
                         {hospital.specialties.map((specialty, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                            className="px-2 py-1 bg-[#6cf0f2] text-[#0c0966] text-xs rounded-full font-medium"
                           >
                             {specialty}
                           </span>
@@ -226,7 +268,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
                     <Button
                       size="sm"
                       onClick={() => openGoogleMaps(hospital.latitude, hospital.longitude)}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 bg-[#6cf0f2] hover:bg-[#5ae0e2] text-black border-0"
                     >
                       <ExternalLink className="h-4 w-4" />
                       View on Map
@@ -235,7 +277,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
                       size="sm"
                       variant="outline"
                       onClick={() => getDirections(hospital.latitude, hospital.longitude)}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 border-[#0c0966] text-[#0c0966] hover:bg-[#6cf0f2]"
                     >
                       <Navigation className="h-4 w-4" />
                       Directions
@@ -251,17 +293,17 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
       </Card>
 
       {/* Pharmacies Section */}
-      <Card>
+      <Card className="bg-white/80 backdrop-blur-sm border-[#6cf0f2] shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-[#0c0966]">
             <MapPin className="h-5 w-5 text-green-500" />
-            Nearby Pharmacies
+            Nearby Pharmacies ({pharmacies.length} found)
           </CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-4">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#0c0966] mx-auto mb-2"></div>
               <p className="text-sm text-gray-600">Loading pharmacies...</p>
             </div>
           ) : pharmacies.length > 0 ? (
@@ -269,17 +311,17 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
               {pharmacies.map((pharmacy) => (
                 <div
                   key={pharmacy.id}
-                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white/60 backdrop-blur-sm border-[#6cf0f2]"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-lg">{pharmacy.name}</h3>
+                    <h3 className="font-semibold text-lg text-[#0c0966]">{pharmacy.name}</h3>
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm">{pharmacy.rating}</span>
+                      <span className="text-sm font-medium">{pharmacy.rating}</span>
                       {pharmacy.open24Hours && (
                         <div className="flex items-center gap-1 ml-2">
                           <Clock className="h-4 w-4 text-green-500" />
-                          <span className="text-xs text-green-600">24/7</span>
+                          <span className="text-xs text-green-600 font-medium">24/7</span>
                         </div>
                       )}
                     </div>
@@ -300,7 +342,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
                     
                     <div className="flex items-center gap-2">
                       <Navigation className="h-4 w-4" />
-                      <span>{pharmacy.distance?.toFixed(1)} km away</span>
+                      <span className="font-medium text-[#0c0966]">{pharmacy.distance?.toFixed(1)} km away</span>
                     </div>
                   </div>
                   
@@ -308,7 +350,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
                     <Button
                       size="sm"
                       onClick={() => openGoogleMaps(pharmacy.latitude, pharmacy.longitude)}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 bg-[#6cf0f2] hover:bg-[#5ae0e2] text-black border-0"
                     >
                       <ExternalLink className="h-4 w-4" />
                       View on Map
@@ -317,7 +359,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userLocation }) => {
                       size="sm"
                       variant="outline"
                       onClick={() => getDirections(pharmacy.latitude, pharmacy.longitude)}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 border-[#0c0966] text-[#0c0966] hover:bg-[#6cf0f2]"
                     >
                       <Navigation className="h-4 w-4" />
                       Directions

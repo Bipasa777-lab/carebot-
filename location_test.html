@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareBot Location Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 10px 0; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        .hospital, .pharmacy { margin: 10px 0; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        .hospital { border-left: 4px solid #dc3545; }
+        .pharmacy { border-left: 4px solid #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 CareBot Location Test</h1>
+        
+        <div class="section info">
+            <h3>📍 Location Detection Test</h3>
+            <button onclick="getLocation()">Get My Location</button>
+            <div id="locationResult"></div>
+        </div>
+
+        <div class="section info">
+            <h3>🏥 Nearby Hospitals Test</h3>
+            <button onclick="getNearbyHospitals()">Find Nearby Hospitals</button>
+            <div id="hospitalsResult"></div>
+        </div>
+
+        <div class="section info">
+            <h3>💊 Nearby Pharmacies Test</h3>
+            <button onclick="getNearbyPharmacies()">Find Nearby Pharmacies</button>
+            <div id="pharmaciesResult"></div>
+        </div>
+
+        <div class="section info">
+            <h3>🔧 Service Status</h3>
+            <button onclick="checkServices()">Check All Services</button>
+            <div id="servicesResult"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentLocation = null;
+
+        function getLocation() {
+            const resultDiv = document.getElementById('locationResult');
+            resultDiv.innerHTML = '<p>Getting location...</p>';
+
+            if (!navigator.geolocation) {
+                resultDiv.innerHTML = '<div class="error"><p>Geolocation is not supported by this browser.</p></div>';
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    currentLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Location Detected Successfully!</h4>
+                            <p><strong>Latitude:</strong> ${currentLocation.latitude.toFixed(6)}</p>
+                            <p><strong>Longitude:</strong> ${currentLocation.longitude.toFixed(6)}</p>
+                            <p><strong>Accuracy:</strong> ${position.coords.accuracy} meters</p>
+                        </div>
+                    `;
+                },
+                (error) => {
+                    let errorMessage = 'Unknown error occurred';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'User denied the request for Geolocation';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Location information is unavailable';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'The request to get user location timed out';
+                            break;
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Location Error</h4>
+                            <p>${errorMessage}</p>
+                        </div>
+                    `;
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 20000,
+                    maximumAge: 300000
+                }
+            );
+        }
+
+        async function getNearbyHospitals() {
+            if (!currentLocation) {
+                document.getElementById('hospitalsResult').innerHTML = 
+                    '<div class="error"><p>Please get your location first!</p></div>';
+                return;
+            }
+
+            const resultDiv = document.getElementById('hospitalsResult');
+            resultDiv.innerHTML = '<p>Finding nearby hospitals...</p>';
+
+            try {
+                const response = await fetch(
+                    `http://localhost:5001/api/hospitals/nearby?lat=${currentLocation.latitude}&lng=${currentLocation.longitude}&radius=10`
+                );
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success && data.hospitals.length > 0) {
+                        let hospitalsHtml = `
+                            <div class="success">
+                                <h4>✅ Found ${data.hospitals.length} hospitals nearby</h4>
+                        `;
+                        
+                        data.hospitals.forEach(hospital => {
+                            hospitalsHtml += `
+                                <div class="hospital">
+                                    <h5>${hospital.name}</h5>
+                                    <p><strong>Address:</strong> ${hospital.address}</p>
+                                    <p><strong>Phone:</strong> ${hospital.phone}</p>
+                                    <p><strong>Rating:</strong> ${hospital.rating}/5</p>
+                                    <p><strong>Distance:</strong> ${hospital.distance} km</p>
+                                    <p><strong>Specialties:</strong> ${hospital.specialties.join(', ')}</p>
+                                    <p><strong>Emergency:</strong> ${hospital.emergency ? 'Yes' : 'No'}</p>
+                                </div>
+                            `;
+                        });
+                        
+                        hospitalsHtml += '</div>';
+                        resultDiv.innerHTML = hospitalsHtml;
+                    } else {
+                        resultDiv.innerHTML = '<div class="error"><p>No hospitals found nearby</p></div>';
+                    }
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><p>Error: ${response.status} ${response.statusText}</p></div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><p>Network Error: ${error.message}</p></div>`;
+            }
+        }
+
+        async function getNearbyPharmacies() {
+            if (!currentLocation) {
+                document.getElementById('pharmaciesResult').innerHTML = 
+                    '<div class="error"><p>Please get your location first!</p></div>';
+                return;
+            }
+
+            const resultDiv = document.getElementById('pharmaciesResult');
+            resultDiv.innerHTML = '<p>Finding nearby pharmacies...</p>';
+
+            try {
+                const response = await fetch(
+                    `http://localhost:5001/api/pharmacies/nearby?lat=${currentLocation.latitude}&lng=${currentLocation.longitude}&radius=5`
+                );
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success && data.pharmacies.length > 0) {
+                        let pharmaciesHtml = `
+                            <div class="success">
+                                <h4>✅ Found ${data.pharmacies.length} pharmacies nearby</h4>
+                        `;
+                        
+                        data.pharmacies.forEach(pharmacy => {
+                            pharmaciesHtml += `
+                                <div class="pharmacy">
+                                    <h5>${pharmacy.name}</h5>
+                                    <p><strong>Address:</strong> ${pharmacy.address}</p>
+                                    <p><strong>Phone:</strong> ${pharmacy.phone}</p>
+                                    <p><strong>Rating:</strong> ${pharmacy.rating}/5</p>
+                                    <p><strong>Distance:</strong> ${pharmacy.distance} km</p>
+                                    <p><strong>24/7:</strong> ${pharmacy.open24Hours ? 'Yes' : 'No'}</p>
+                                    <p><strong>Services:</strong> ${pharmacy.services.join(', ')}</p>
+                                </div>
+                            `;
+                        });
+                        
+                        pharmaciesHtml += '</div>';
+                        resultDiv.innerHTML = pharmaciesHtml;
+                    } else {
+                        resultDiv.innerHTML = '<div class="error"><p>No pharmacies found nearby</p></div>';
+                    }
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><p>Error: ${response.status} ${response.statusText}</p></div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error"><p>Network Error: ${error.message}</p></div>`;
+            }
+        }
+
+        async function checkServices() {
+            const resultDiv = document.getElementById('servicesResult');
+            resultDiv.innerHTML = '<p>Checking services...</p>';
+
+            const services = [
+                { name: 'Auth Server', url: 'http://localhost:5000/health' },
+                { name: 'Chat Server', url: 'http://localhost:8000/health' },
+                { name: 'Location Service', url: 'http://localhost:5001/health' }
+            ];
+
+            let resultsHtml = '<div class="info"><h4>🔧 Service Status</h4>';
+
+            for (const service of services) {
+                try {
+                    const response = await fetch(service.url);
+                    if (response.ok) {
+                        resultsHtml += `<p>✅ ${service.name}: Running</p>`;
+                    } else {
+                        resultsHtml += `<p>❌ ${service.name}: Error ${response.status}</p>`;
+                    }
+                } catch (error) {
+                    resultsHtml += `<p>❌ ${service.name}: Not running</p>`;
+                }
+            }
+
+            resultsHtml += '</div>';
+            resultDiv.innerHTML = resultsHtml;
+        }
+
+        // Auto-check services on page load
+        window.onload = function() {
+            checkServices();
+        };
+    </script>
+</body>
+</html>
