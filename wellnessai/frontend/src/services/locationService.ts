@@ -34,7 +34,8 @@ export interface Pharmacy {
 
 export class LocationService {
   static async getCurrentLocation(): Promise<Location> {
-    return new Promise((resolve, reject) => {
+    // Try browser geolocation first; on error or timeout, fall back to IP-based location
+    const geolocationPromise = new Promise<Location>((resolve, reject) => {
       if (!navigator.geolocation) {
         reject(new Error("Geolocation is not supported by this browser."));
         return;
@@ -51,12 +52,56 @@ export class LocationService {
           reject(new Error(`Geolocation error: ${error.message}`));
         },
         {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 300000, // 5 minutes
+          enableHighAccuracy: false, // avoid slow GPS on desktops; still accurate enough
+          timeout: 20000, // give more time before timing out
+          maximumAge: 300000, // 5 minutes cache
         }
       );
     });
+
+    try {
+      return await geolocationPromise;
+    } catch (geoError) {
+      // Fall back to IP geolocation
+      const ipLocation = await this.getLocationViaIP();
+      if (ipLocation) return ipLocation;
+      throw geoError instanceof Error ? geoError : new Error("Failed to get location");
+    }
+  }
+
+  private static async getLocationViaIP(): Promise<Location | null> {
+    try {
+      // Primary: ipapi.co (no key needed; subject to rate limits)
+      const res = await fetch("https://ipapi.co/json/");
+      if (res.ok) {
+        const data: any = await res.json();
+        if (typeof data?.latitude === "number" && typeof data?.longitude === "number") {
+          return { latitude: data.latitude, longitude: data.longitude };
+        }
+        // Some variants use lat/long keys
+        if (typeof data?.lat === "number" && typeof data?.lon === "number") {
+          return { latitude: data.lat, longitude: data.lon };
+        }
+      }
+    } catch (_) {}
+
+    try {
+      // Secondary: ipinfo.io (may be approximate; usually no key needed for dev)
+      const res2 = await fetch("https://ipinfo.io/json");
+      if (res2.ok) {
+        const data2: any = await res2.json();
+        if (typeof data2?.loc === "string") {
+          const [latStr, lngStr] = data2.loc.split(",");
+          const lat = parseFloat(latStr);
+          const lng = parseFloat(lngStr);
+          if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+            return { latitude: lat, longitude: lng };
+          }
+        }
+      }
+    } catch (_) {}
+
+    return null;
   }
 
   static calculateDistance(
