@@ -10,8 +10,23 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
-export const Frame = (): JSX.Element => {
+const Frame = (): JSX.Element => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleGetStartedClick = () => {
+    if (user) {
+      // User is already logged in, go directly to dashboard
+      router.push("/dashboard");
+    } else {
+      // User is not logged in, go to signup page
+      router.push("/auth/signup");
+    }
+  };
+
   return (
     <main className="bg-[#bcf3f3] min-h-screen w-full flex justify-center scroll-smooth">
       <div className="w-full max-w-[1440px] relative flex flex-col items-center overflow-hidden">
@@ -77,11 +92,11 @@ export const Frame = (): JSX.Element => {
                   className="rounded-[40px] border border-solid 
                 shadow-[0_0_15px_#6cf0f2,0_0_30px_#6cf0f2] 
                 bg-[#6cf0f2] animate-pulse hover:scale-105 transition duration-300 px-8 py-4"
-                  onClick={() => window.location.href = '/auth/signup'}
+                  onClick={handleGetStartedClick}
                 >
                   <div className="flex items-center space-x-3">
                     <span className="font-medium text-black text-lg md:text-xl lg:text-2xl leading-normal">
-                      Get Started Free
+                      {user ? "Go to Dashboard" : "Get Started Free"}
                     </span>
                     <ArrowRightIcon className="w-5 h-5 text-black" />
                   </div>
